@@ -16,10 +16,6 @@
 
 package org.springframework.core;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Objects;
-
 import kotlin.Unit;
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KClassifier;
@@ -27,17 +23,17 @@ import kotlin.reflect.KFunction;
 import kotlin.reflect.full.KCallables;
 import kotlin.reflect.jvm.KCallablesJvm;
 import kotlin.reflect.jvm.ReflectJvmMapping;
-import kotlinx.coroutines.BuildersKt;
-import kotlinx.coroutines.CoroutineStart;
-import kotlinx.coroutines.Deferred;
-import kotlinx.coroutines.Dispatchers;
-import kotlinx.coroutines.GlobalScope;
+import kotlinx.coroutines.*;
 import kotlinx.coroutines.flow.Flow;
 import kotlinx.coroutines.reactor.MonoKt;
 import kotlinx.coroutines.reactor.ReactorFlowKt;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * Utilities for working with Kotlin Coroutines.
@@ -71,7 +67,10 @@ public abstract class CoroutinesUtils {
 	 */
 	public static Publisher<?> invokeSuspendingFunction(Method method, Object target, Object... args) {
 		KFunction<?> function = Objects.requireNonNull(ReflectJvmMapping.getKotlinFunction(method));
-		if (method.isAccessible() && !KCallablesJvm.isAccessible(function)) {
+		// if (method.isAccessible() && !KCallablesJvm.isAccessible(function)) {
+		// 	KCallablesJvm.setAccessible(function, true);
+		// }
+		if (!KCallablesJvm.isAccessible(function)) {
 			KCallablesJvm.setAccessible(function, true);
 		}
 		KClassifier classifier = function.getReturnType().getClassifier();
