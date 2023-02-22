@@ -168,7 +168,7 @@ public abstract class AbstractResource implements Resource {
 	 * checking File length, or possibly simply returning -1 if the stream can
 	 * only be read once.
 	 * @see #getInputStream()
-	 * 
+	 *
 	 * 这个资源内容长度实际就是资源的字节长度，通过全部读取一遍来判断
 	 */
 	@Override
@@ -176,6 +176,7 @@ public abstract class AbstractResource implements Resource {
 		InputStream is = getInputStream();
 		try {
 			long size = 0;
+			// 每次最多读取 256 字节
 			byte[] buf = new byte[256];
 			int read;
 			while ((read = is.read(buf)) != -1) {
@@ -200,6 +201,7 @@ public abstract class AbstractResource implements Resource {
 	 * This implementation checks the timestamp of the underlying File,
 	 * if available.
 	 * @see #getFileForLastModifiedCheck()
+	 * 资源的最后修改时间
 	 */
 	@Override
 	public long lastModified() throws IOException {
@@ -227,6 +229,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation throws a FileNotFoundException, assuming
 	 * that relative resources cannot be created for this resource.
+	 * 抛出 FileNotFoundException 异常，交给子类实现
 	 */
 	@Override
 	public Resource createRelative(String relativePath) throws IOException {
@@ -236,6 +239,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation always returns {@code null},
 	 * assuming that this resource type does not have a filename.
+	 * 获取资源名称，默认返回 null ，交给子类实现
 	 */
 	@Override
 	@Nullable
@@ -266,6 +270,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * This implementation returns the description of this resource.
 	 * @see #getDescription()
+	 * 返回资源的描述
 	 */
 	@Override
 	public String toString() {
